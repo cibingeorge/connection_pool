@@ -38,14 +38,20 @@ class ConnectionPool::TimedStack
     @que = []
 
     @max = size
-    (1..size).each do
-      connection = try_create
-      @que.push connection
-    end
-
     @mutex = Mutex.new
     @resource = ConditionVariable.new
     @shutdown_block = nil
+    init_connections
+  end
+
+
+  def init_connections
+    @mutex.synchronize do
+      (@que.length..(@max-1)).each do
+        connection = try_create
+        @que.push connection
+      end
+    end
   end
 
   ##
