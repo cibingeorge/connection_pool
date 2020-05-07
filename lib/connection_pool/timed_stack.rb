@@ -38,7 +38,7 @@ class ConnectionPool::TimedStack
     @que = []
 
     @max = size
-    (0..size).each do
+    (1..size).each do
       connection = try_create
       @que.push connection
     end
